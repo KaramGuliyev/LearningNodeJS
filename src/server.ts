@@ -7,9 +7,9 @@ import morgan from "morgan";
 import "dotenv/config";
 
 const app = express();
-const port = process.env.PORT
+const port = process.env.PORT;
 
-app.use(express.json());
+app.use(express.json())
 app.use(morgan("dev"));
 
 app.listen(port, () => {
@@ -19,8 +19,8 @@ app.listen(port, () => {
 });
 
 app.get("/api/planets", (req, res) => {
-  res.status(200).json(planets)
-})
+  res.status(200).json(planets);
+});
 
 type Planet = {
   id: number;
