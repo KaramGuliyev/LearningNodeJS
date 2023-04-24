@@ -8,12 +8,6 @@ const app = express();
 const port = process.env.PORT;
 app.use(express.json());
 app.use(morgan("dev"));
-app.listen(port, () => {
-    console.log(`Server is running on port http://localhost:${port}`);
-});
-app.get("/api/planets", (req, res) => {
-    res.status(200).json(planets);
-});
 let planets = [
     {
         id: 1,
@@ -24,3 +18,31 @@ let planets = [
         name: "Mars",
     },
 ];
+app.get("/api/planets", (req, res) => {
+    res.status(200).json(planets);
+});
+app.get("/api/planets/:id", (req, res) => {
+    const { id } = req.params;
+    const planet = planets.find((p) => p.id === Number(id));
+    res.status(200).json(planet);
+});
+app.post("/api/planets", (req, res) => {
+    const { id, name } = req.body;
+    const newPlanet = { id: Number(id), name: name };
+    planets = [...planets, newPlanet];
+    res.status(201).json({ msg: "Planet created successfully!" });
+});
+app.put("/api/planets/:id", (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    planets = planets.map((pEl) => pEl.id === Number(id) ? Object.assign(Object.assign({}, pEl), { name }) : pEl);
+    res.status(201).json({ msg: "Planet Updated successfully!" });
+});
+app.delete("/api/planets", (req, res) => {
+    const { id } = req.body;
+    planets.filter((el) => el.id !== Number(id));
+    res.status(200).json({ msg: "Planet deleted successfully!" });
+});
+app.listen(port, () => {
+    console.log(`Server is running on port http://localhost:${port}`);
+});
