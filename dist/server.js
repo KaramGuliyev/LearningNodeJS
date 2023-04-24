@@ -11,7 +11,7 @@ app.use(morgan("dev"));
 app.listen(port, () => {
     console.log(`Server is running on port http://localhost:${port}`);
 });
-app.get("/planets", (req, res) => {
+app.get("/api/planets", (req, res) => {
     res.status(200).json(planets);
 });
 let planets = [

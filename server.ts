@@ -18,7 +18,7 @@ app.listen(port, () => {
   );
 });
 
-app.get("/planets", (req, res) => {
+app.get("/api/planets", (req, res) => {
   res.status(200).json(planets)
 })
 
