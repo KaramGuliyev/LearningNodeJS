@@ -29,16 +29,15 @@ const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const getOneById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const planet = yield db.oneOrNone(`SELECT * FROM planets WHERE id=$1;`, (Number(id)));
+    const planet = yield db.oneOrNone(`SELECT * FROM planets WHERE id=$1;`, Number(id));
     res.status(200).json(planet);
 });
 const planetsSchema = Joi.object({
-    id: Joi.number().integer().required(),
     name: Joi.string().required(),
 });
-const createOne = (req, res) => {
-    const { id, name } = req.body;
-    const newPlanet = { id: Number(id), name: name };
+const createOne = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name } = req.body;
+    const newPlanet = { name };
     const validateNewPlanet = planetsSchema.validate(newPlanet);
     if (validateNewPlanet.error) {
         return res.status(400).json({
@@ -46,13 +45,12 @@ const createOne = (req, res) => {
         });
     }
     else {
-        // planets = [...planets, newPlanet];
+        yield db.none(`INSERT INTO planets (name) VALUES ($1)`, name);
         res.status(201).json({
             msg: "Planet created successfully!",
-            // planets: planets,
         });
     }
-};
+});
 const updateOneById = (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
@@ -64,14 +62,12 @@ const updateOneById = (req, res) => {
     //   planets: planets,
     // });
 };
-const deleteOneById = (req, res) => {
+const deleteOneById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    // planets = planets.filter((el) => el.id !== Number(id));
-    // res.status(200).json({
-    //   msg: "Planet deleted successfully!",
-    //   planets: planets,
-    // });
-    // console.log(planets);
-};
+    yield db.none(`DELETE FROM planets WHERE id=$1`, Number(id));
+    res.status(200).json({
+        msg: "Planet deleted successfully!",
+    });
+});
 export { getAll, getOneById, createOne, updateOneById, deleteOneById, };
 // I already did that part for Ex-12, Everything tested works perfectly!

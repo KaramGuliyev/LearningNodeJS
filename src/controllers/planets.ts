@@ -17,11 +17,9 @@ const setupDB = async () => {
   `);
   await db.none(`INSERT INTO planets (name) VALUES ('Earth')`);
   await db.none(`INSERT INTO planets (name) VALUES ('Mars')`);
-
 };
 
 setupDB();
-
 
 const getAll = async (req: Request, res: Response) => {
   const planets = await db.many(`SELECT * FROM planets;`);
@@ -30,18 +28,20 @@ const getAll = async (req: Request, res: Response) => {
 
 const getOneById = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const planet = await db.oneOrNone(`SELECT * FROM planets WHERE id=$1;`, (Number(id)));
+  const planet = await db.oneOrNone(
+    `SELECT * FROM planets WHERE id=$1;`,
+    Number(id)
+  );
   res.status(200).json(planet);
 };
 
 const planetsSchema = Joi.object({
-  id: Joi.number().integer().required(),
   name: Joi.string().required(),
 });
 
-const createOne = (req: Request, res: Response) => {
-  const { id, name } = req.body;
-  const newPlanet = { id: Number(id), name: name };
+const createOne = async (req: Request, res: Response) => {
+  const { name } = req.body;
+  const newPlanet = { name };
   const validateNewPlanet = planetsSchema.validate(newPlanet);
 
   if (validateNewPlanet.error) {
@@ -49,10 +49,12 @@ const createOne = (req: Request, res: Response) => {
       msg: validateNewPlanet.error.details[0].message,
     });
   } else {
-    // planets = [...planets, newPlanet];
+    await db.none(
+      `INSERT INTO planets (name) VALUES ($1)`,
+      name
+    );
     res.status(201).json({
       msg: "Planet created successfully!",
-      // planets: planets,
     });
   }
 };
@@ -69,14 +71,13 @@ const updateOneById = (req: Request, res: Response) => {
   // });
 };
 
-const deleteOneById = (req: Request, res: Response) => {
+const deleteOneById = async (req: Request, res: Response) => {
   const { id } = req.params;
-  // planets = planets.filter((el) => el.id !== Number(id));
-  // res.status(200).json({
-  //   msg: "Planet deleted successfully!",
-  //   planets: planets,
-  // });
-  // console.log(planets);
+
+  await db.none(`DELETE FROM planets WHERE id=$1`, Number(id));
+  res.status(200).json({
+    msg: "Planet deleted successfully!",
+  });
 };
 
 export {
