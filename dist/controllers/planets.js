@@ -16,7 +16,8 @@ const setupDB = () => __awaiter(void 0, void 0, void 0, function* () {
 
   CREATE TABLE planets (
     id SERIAL NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    image TEXT
     );
   `);
     yield db.none(`INSERT INTO planets (name) VALUES ('Earth')`);
@@ -69,5 +70,19 @@ const deleteOneById = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         msg: "Planet deleted successfully!",
     });
 });
-export { getAll, getOneById, createOne, updateOneById, deleteOneById, };
+const createImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const { id } = req.params;
+    const fileName = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
+    if (fileName) {
+        db.none("UPDATE planets SET image=$2 WHERE id=$1;", [id, fileName]);
+        res
+            .status(201)
+            .json({ msg: "Planet Image Uploaded Successfully" });
+    }
+    else {
+        res.status(400).json({ msg: "Bad Request G" });
+    }
+});
+export { getAll, getOneById, createOne, updateOneById, deleteOneById, createImage, };
 // I already did that part for Ex-12, Everything tested works perfectly!
