@@ -1,5 +1,11 @@
 import { Response, Request } from "express";
 import Joi from "joi";
+import pgPromise from "pg-promise";
+
+const db = pgPromise()("postgres://postgres:postgres@localhost:5432/NodeJS")
+
+console.log(db);
+
 
 type Planet = {
   id: number;
