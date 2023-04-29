@@ -59,16 +59,16 @@ const createOne = async (req: Request, res: Response) => {
   }
 };
 
-const updateOneById = (req: Request, res: Response) => {
+const updateOneById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name } = req.body;
-  // planets = planets.map((pEl) =>
-  //   pEl.id === Number(id) ? { ...pEl, name } : pEl
-  // );
-  // res.status(201).json({
-  //   msg: "Planet Updated successfully!",
-  //   planets: planets,
-  // });
+  await db.none(`UPDATE planets SET name=$2 WHERE id=$1`, [
+    id,
+    name,
+  ]);
+  res.status(201).json({
+    msg: "Planet Updated successfully!",
+  });
 };
 
 const deleteOneById = async (req: Request, res: Response) => {

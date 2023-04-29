@@ -51,17 +51,17 @@ const createOne = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 });
-const updateOneById = (req, res) => {
+const updateOneById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { name } = req.body;
-    // planets = planets.map((pEl) =>
-    //   pEl.id === Number(id) ? { ...pEl, name } : pEl
-    // );
-    // res.status(201).json({
-    //   msg: "Planet Updated successfully!",
-    //   planets: planets,
-    // });
-};
+    yield db.none(`UPDATE planets SET name=$2 WHERE id=$1`, [
+        id,
+        name,
+    ]);
+    res.status(201).json({
+        msg: "Planet Updated successfully!",
+    });
+});
 const deleteOneById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     yield db.none(`DELETE FROM planets WHERE id=$1`, Number(id));
