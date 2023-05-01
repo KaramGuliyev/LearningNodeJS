@@ -13,7 +13,7 @@ import {
   deleteOneById,
   createImage,
 } from "./controllers/planets.js";
-import { logIn } from "./controllers/users.js";
+import { logIn,signUp } from "./controllers/users.js";
 import multer from "multer";
 
 const storage = multer.diskStorage({
@@ -49,6 +49,8 @@ app.post(
 );
 
 app.post("/api/users/login", logIn);
+
+app.post("/api/users/signUp", signUp);
 
 app.listen(port, () => {
   console.log(

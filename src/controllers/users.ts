@@ -19,7 +19,7 @@ const logIn = async (req: Request, res: Response) => {
       id: user.id,
       username,
     };
-    const token = jwt.sign(payload, SECRET);
+    const token = jwt.sign(payload, SECRET)
 
     console.log(token);
 
@@ -28,7 +28,6 @@ const logIn = async (req: Request, res: Response) => {
       token,
     ]);
     res.status(200).json({ id: user.id, username, token });
-
   } else {
     res
       .status(400)
@@ -36,4 +35,25 @@ const logIn = async (req: Request, res: Response) => {
   }
 };
 
-export { logIn };
+const signUp = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+
+  const user = await db.oneOrNone(
+    `SELECT * FROM users WHERE username=$1`,
+    username
+  );
+
+  if (user) {
+    res.status(400).json({ msg: "Username is already using!" });
+  } else {
+    const { id } = await db.one(
+      `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id `,
+      [username, password]
+    );
+    res
+      .status(201)
+      .json({ id, msg: "User created successfully!" });
+  }
+};
+
+export { logIn, signUp };

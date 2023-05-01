@@ -34,4 +34,17 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             .json({ msg: "Username or Password is incorrect" });
     }
 });
-export { logIn };
+const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, password } = req.body;
+    const user = yield db.oneOrNone(`SELECT * FROM users WHERE username=$1`, username);
+    if (user) {
+        res.status(400).json({ msg: "Username is already using!" });
+    }
+    else {
+        const { id } = yield db.one(`INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id `, [username, password]);
+        res
+            .status(201)
+            .json({ id, msg: "User created successfully!" });
+    }
+});
+export { logIn, signUp };
