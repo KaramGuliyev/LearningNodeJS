@@ -13,8 +13,10 @@ import {
   deleteOneById,
   createImage,
 } from "./controllers/planets.js";
-import { logIn,signUp } from "./controllers/users.js";
+import { logIn, signUp, logOut } from "./controllers/users.js";
 import multer from "multer";
+import authorize from "./authorize.js";
+import './passport.js'
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
@@ -50,7 +52,9 @@ app.post(
 
 app.post("/api/users/login", logIn);
 
-app.post("/api/users/signUp", signUp);
+app.post("/api/users/signup", signUp);
+
+app.get("/api/users/logout", authorize, logOut);
 
 app.listen(port, () => {
   console.log(

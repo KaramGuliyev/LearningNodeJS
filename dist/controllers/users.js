@@ -21,7 +21,6 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             username,
         };
         const token = jwt.sign(payload, SECRET);
-        console.log(token);
         yield db.none(`UPDATE users SET token=$2 WHERE id=$1`, [
             user.id,
             token,
@@ -47,4 +46,12 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             .json({ id, msg: "User created successfully!" });
     }
 });
-export { logIn, signUp };
+const logOut = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    yield db.none(`UPDATE users SET token=$2 WHERE id=$1`, [
+        user === null || user === void 0 ? void 0 : user.id,
+        null,
+    ]);
+    res.status(200).json({ msg: "Successful!" });
+});
+export { logIn, signUp, logOut };
