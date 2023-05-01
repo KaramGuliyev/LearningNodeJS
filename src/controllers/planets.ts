@@ -1,26 +1,6 @@
 import { Response, Request } from "express";
 import Joi from "joi";
-import pgPromise from "pg-promise";
-
-const db = pgPromise()(
-  "postgres://postgres:postgres@localhost:5432/TestServer"
-);
-
-const setupDB = async () => {
-  await db.none(`
-  DROP TABLE IF EXISTS planets;
-
-  CREATE TABLE planets (
-    id SERIAL NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL,
-    image TEXT
-    );
-  `);
-  await db.none(`INSERT INTO planets (name) VALUES ('Earth')`);
-  await db.none(`INSERT INTO planets (name) VALUES ('Mars')`);
-};
-
-setupDB();
+import db from "../db.js";
 
 const getAll = async (req: Request, res: Response) => {
   const planets = await db.many(`SELECT * FROM planets;`);
@@ -33,7 +13,7 @@ const getOneById = async (req: Request, res: Response) => {
     `SELECT * FROM planets WHERE id=$1;`,
     Number(id)
   );
-  res.status(200).json(planet);
+  res.status(200).json(planet)
 };
 
 const planetsSchema = Joi.object({
