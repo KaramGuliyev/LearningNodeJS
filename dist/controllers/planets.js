@@ -19,7 +19,7 @@ const getOneById = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     res.status(200).json(planet);
 });
 const planetsSchema = Joi.object({
-    name: Joi.string().required(),
+    name: Joi.string().required()
 });
 const createOne = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.body;

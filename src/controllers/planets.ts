@@ -17,7 +17,7 @@ const getOneById = async (req: Request, res: Response) => {
 };
 
 const planetsSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.string().required()
 });
 
 const createOne = async (req: Request, res: Response) => {
@@ -75,6 +75,8 @@ const createImage = async (req: Request, res: Response) => {
     res.status(400).json({ msg: "Bad Request G" });
   }
 };
+
+
 
 export {
   getAll,

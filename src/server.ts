@@ -13,19 +13,17 @@ import {
   deleteOneById,
   createImage,
 } from "./controllers/planets.js";
+import { logIn } from "./controllers/users.js";
 import multer from "multer";
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    cb(null, "uploads/")
+    cb(null, "uploads/");
   },
-  filename:  (_req, file, cb)=> {
+  filename: (_req, file, cb) => {
     cb(null, `${file.originalname}`);
   },
 });
-
-
-
 
 const upload = multer({ storage });
 const app = express();
@@ -38,7 +36,7 @@ app.get("/api/planets", getAll);
 
 app.get("/api/planets/:id", getOneById);
 
-app.post("/api/planets", createOne)
+app.post("/api/planets", createOne);
 
 app.put("/api/planets/:id", updateOneById);
 
@@ -49,6 +47,8 @@ app.post(
   upload.single("image"),
   createImage
 );
+
+app.post("/api/users/login", logIn);
 
 app.listen(port, () => {
   console.log(
